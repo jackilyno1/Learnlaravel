@@ -15,18 +15,44 @@ class UsersController extends Controller
         $this->users = new  Users();
     }
 
-    public function index(){
+    public function index(Request $request){
 
         // $statement = $this->users->statementUser("DELETE FROM addusers");
 
         $title = 'Danh sách người dùng';
 
-        $data = $this->users->learnQueryBuilder();
+        // $data = $this->users->learnQueryBuilder();
 
         // $users = DB::select('SELECT * FROM admins ORDER BY create_at DESC');
-        
 
-        $usersList = $this->users->getAllUsers();
+        $filters = [];
+
+        $keywords = null;
+
+        if (!empty($request->status)) {
+           $status = $request->status;
+           if ($status=='active') {
+                $status = 1;
+           }else {
+                $status = 0;
+           }
+
+           $filters[] = [
+            'addusers.status', '=', $status
+           ];
+        }
+
+        if (!empty($request->group_id)) {
+            $groupId = $request->group_id;
+
+            $filters[] = ['addusers.group_id', '=', $groupId];
+         }
+
+         if (!empty($request->keywords)) {
+            $keywords = $request->keywords;
+         }
+
+        $usersList = $this->users->getAllUsers($filters, $keywords);
 
         return view('clients.users.lists', compact('title', 'usersList'));
     }
