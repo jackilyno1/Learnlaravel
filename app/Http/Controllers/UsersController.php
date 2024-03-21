@@ -52,9 +52,32 @@ class UsersController extends Controller
             $keywords = $request->keywords;
          }
 
-        $usersList = $this->users->getAllUsers($filters, $keywords);
+        //Xử lý logic sắp xếp
 
-        return view('clients.users.lists', compact('title', 'usersList'));
+        $sortBy = $request->input('sort-by');
+
+        $sortType = $request->input('sort-type');
+
+        $allowSort = ['asc', 'desc'];
+
+        if (!empty($sortType) && in_array($sortType, $allowSort)){
+            if ($sortType=='desc') {
+                $sortType = 'asc';
+            }else {
+                $sortType = 'desc';
+            }
+        }else {
+            $sortType = 'asc';
+        }
+
+        $sortArr = [
+            'sortBy' => $sortBy,
+            'sortType' => $sortType
+        ];
+        
+        $usersList = $this->users->getAllUsers($filters, $keywords, $sortArr);
+
+        return view('clients.users.lists', compact('title', 'usersList', 'sortType'));
     }
     public function add(){
         $title = 'Thêm người dùng';

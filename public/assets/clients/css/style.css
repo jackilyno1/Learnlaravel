@@ -1,0 +1,8 @@
+table thead a {
+    color: inherit;
+    text-decoration: none;
+}
+
+table thead a:hover {
+    color: blue;
+}
