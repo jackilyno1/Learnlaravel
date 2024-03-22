@@ -59,8 +59,9 @@ class Users extends Model
     }
 
     public function addUser($data){
-        DB::insert('INSERT INTO addusers (fullname, email, create_at) values (?, ?, ?)',
-        $data);
+        // DB::insert('INSERT INTO addusers (fullname, email, create_at) values (?, ?, ?)',
+        // $data);
+        return DB::table($this->table)->insert($data);
     }
 
     public function getDetail($id){
