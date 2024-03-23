@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\UserRequest;
 
 use App\Models\Users;
 
@@ -90,27 +91,8 @@ class UsersController extends Controller
         return view('clients.users.add', compact('title', 'allGroups'));
     }
 
-    public function postAdd(Request $request){
-        $request->validate([
-            'fullname' => 'required|min:5',
-            'email' => 'required|email|unique:addusers',
-            'group_id' => ['required', 'integer', function($attribute, $value, $fail){
-                if ($value==0) {
-                    $fail('Bắt buộc phải chọn nhóm');
-                }
-            }],
-            'status' => 'required|integer',
-        ],[
-            'fullname.required' => 'Họ và tên bắt buộc phải nhập',
-            'fullname.min' => 'Họ và tên phải từ :min ký tự trở lên',
-            'email.required' => 'Email bắt buộc phải nhập',
-            'email.email' => 'Email không đúng định dạng',
-            'email.unique' => 'Email đã tồn tại trên hệ thống',
-            'group_id.required' => 'Bắt buộc phải chọn nhóm',
-            'group_id.integer' => 'Nhóm không hợp lệ',
-            'status.required' => 'Bắt buộc phải chọn trạng thái ',
-            'status.integer' => 'Trạng thái không hợp lệ'
-        ]);
+    public function postAdd(UserRequest $request){
+        
 
         // dd($request->all());
 
@@ -128,9 +110,8 @@ class UsersController extends Controller
     }
 
     public function getEdit(Request $request, $id=0){
+
         $title = 'Cập nhật người dùng';
-
-
 
         if (!empty($id)) {
             $userDetail = $this->users->getDetail($id);
@@ -144,10 +125,12 @@ class UsersController extends Controller
             return redirect()->route('users.index')->with('msg', 'Liên kết không tồn tại');
         }
 
-        return view('clients.users.edit', compact('title', 'userDetail'));
+        $allGroups = getAllGroups();
+
+        return view('clients.users.edit', compact('title', 'userDetail', 'allGroups'));
     }
 
-    public function postEdit(Request $request){
+    public function postEdit(UserRequest $request){
 
         $id = session('id');
 
@@ -155,21 +138,12 @@ class UsersController extends Controller
             return back()->with('msg', 'Liên kết không tồn tại');
         }
 
-        $request->validate([
-            'fullname' => 'required|min:5',
-            'email' => 'required|email|unique:addusers,email,'.$id
-        ],[
-            'fullname.required' => 'Họ và tên bắt buộc phải nhập',
-            'fullname.min' => 'Họ và tên phải từ :min ký tự trở lên',
-            'email.required' => 'Email bắt buộc phải nhập',
-            'email.email' => 'Email không đúng định dạng',
-            'email.unique' => 'Email đã tồn tại trên hệ thống'
-        ]);
-
         $dataUpdate = [
-            $request->fullname,
-            $request->email,
-            date('Y-m-d H:i:s')
+            'fullname' => $request->fullname,
+            'email' => $request->email,
+            'group_id' => $request->group_id,
+            'status' => $request->status,
+            'update_at' => date('Y-m-d H:i:s')
         ];
 
         $this->users->updateUser($dataUpdate, $id);
