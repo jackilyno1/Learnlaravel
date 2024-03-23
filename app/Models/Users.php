@@ -19,7 +19,8 @@ class Users extends Model
 
         $users = DB::table($this->table)
         ->select('addusers.*', 'groups.name as group_name')
-        ->join('groups', 'addusers.group_id', '=', 'groups.id');
+        ->join('groups', 'addusers.group_id', '=', 'groups.id')
+        ->where('trash', 0);
 
         $orderBy = 'addusers.create_at';
         $orderType = 'desc';
@@ -77,7 +78,8 @@ class Users extends Model
         return DB::table($this->table)->where('id', $id)->update($data);
     }
     public function deleteUser($id){
-       return DB::delete("DELETE FROM $this->table WHERE id=?", [$id]);
+    //    return DB::delete("DELETE FROM $this->table WHERE id=?", [$id]);
+        return DB::table($this->table)->where('id', $id)->delete();
     }
     public function statementUser($sql)
     {
