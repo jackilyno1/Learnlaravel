@@ -13,7 +13,8 @@ class Users extends Model
 
     protected $table = 'addusers';
 
-    public function getAllUsers($filters = [], $keywords = null, $sortByArr = null){
+    public function getAllUsers($filters = [], $keywords = null, $sortByArr = null, 
+    $perPage = null){
         // $users = DB::select('SELECT * FROM addusers ORDER BY create_at DESC');
 
         $users = DB::table($this->table)
@@ -44,14 +45,23 @@ class Users extends Model
             });
         }
 
-        $users = $users->get();
+        // $users = $users->get();
+
+        if (!empty($perPage)) {
+            $users = $users->paginate($perPage)->withQueryString(); // $perPage bản ghi trên 1 trang
+        }else {
+            $users = $users->get();
+        }
+
+        
 
         return $users;
     }
 
     public function addUser($data){
-        DB::insert('INSERT INTO addusers (fullname, email, create_at) values (?, ?, ?)',
-        $data);
+        // DB::insert('INSERT INTO addusers (fullname, email, create_at) values (?, ?, ?)',
+        // $data);
+        return DB::table($this->table)->insert($data);
     }
 
     public function getDetail($id){
