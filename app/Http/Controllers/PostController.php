@@ -56,4 +56,39 @@ class PostController extends Controller
             echo $item->title;
         }
     }
+    public function add(){
+        $dataInsert = [
+            'title' => 'Báo danh 4',
+            'content' => 'Nội dung 4',
+            'status' => 1
+        ];
+
+        // $post = Post::create($dataInsert);
+
+        // echo 'Id vừa insert: '.$post->id;
+
+        // $insertStatus = Post::insert($dataInsert);
+        // dd($insertStatus);
+
+        // $post = Post::firstOrCreate([
+        //     'id' => 11
+        // ], $dataInsert);
+
+        $check = true;
+            
+        $post = new Post;
+
+        $post->title ='Bài viết mới';
+
+        $post->content ='Nội dung mới';
+
+        if ($check) {
+            $post->status = 1;
+        }
+
+        $post->save();
+
+        echo 'Id vừa insert: '.$post->id;
+        dd($post);
+    }
 }
