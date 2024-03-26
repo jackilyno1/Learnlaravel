@@ -32,4 +32,6 @@ class Post extends Model
     protected $attributes = [
         'status' => 0
     ];
+
+    protected $fillable = ['title', 'content', 'status'];
 }
