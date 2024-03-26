@@ -131,12 +131,13 @@ class UsersController extends Controller
     }
 
     public function postEdit(UserRequest $request){
-
         $id = session('id');
 
-        if (!empty($id)) {
+        if (empty($id)) {
             return back()->with('msg', 'Liên kết không tồn tại');
         }
+
+        
 
         $dataUpdate = [
             'fullname' => $request->fullname,

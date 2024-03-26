@@ -17,7 +17,7 @@
     @endif
 
     <h1>{{$title}}</h1>
-    <form action="{{route('users.post-edit')}}" method="POST">
+    <form action="{{route('users.post-edit',$userDetail->id)}}" method="POST">
         <div class="mb-3">
             <label for="">Họ và tên</label>
             <input type="text" class="form-control" name="fullname" 
