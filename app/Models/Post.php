@@ -24,7 +24,7 @@ class Post extends Model
 
     // protected $keyType = 'string';
 
-    // public $timestamps = true;
+    public $timestamps = true;
 
     const CREATED_AT = 'create_at';
     const UPDATED_AT = 'update_at';
